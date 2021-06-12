@@ -3,18 +3,13 @@ const router = express.Router()
 const users = require('./modules/users')
 const home = require('./modules/home')
 const todos = require('./modules/todos')
+const { authenticator } = require('../middleware/auth')
 
-const authenticated = (req, res, next) => {
-  if (req.isAuthenticated()) {
-    return next()
-  }
-  res.redirect('/login')
-}
 router.use('/', users)
 
-router.use('/',authenticated, home)
+router.use('/',authenticator, home)
 
-router.use('/todos/',authenticated, todos)
+router.use('/todos/',authenticator, todos)
 
 
 module.exports = router
