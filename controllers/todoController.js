@@ -56,6 +56,17 @@ const todoController = {
     } catch (err) {
       console.log(err)
     }
+  },
+  deleteTodo: async (req, res) => {
+  try {
+      const UserId = req.user.id
+      const id = req.params.id
+      const todo = await Todo.findOne({ where: { id, UserId } })
+      todo.destroy()
+      return res.redirect('/')
+    } catch (err) {
+      console.log(err)
+    }
   }
 }
 
