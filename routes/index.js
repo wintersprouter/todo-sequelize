@@ -7,9 +7,8 @@ const { authenticator } = require('../middleware/auth')
 
 router.use('/', users)
 
-router.use('/',authenticator, home)
+router.use('/', authenticator, home)
 
-router.use('/todos/',authenticator, todos)
-
+router.use('/todos/', authenticator, todos)
 
 module.exports = router
