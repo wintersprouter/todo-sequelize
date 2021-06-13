@@ -2,7 +2,7 @@ const db = require('../models')
 const { Todo } = db
 
 const todoController = {
-  getNewTodoPage: (req, res) => {
+  getCreateTodoPage: (req, res) => {
     return res.render('new')
   },
   createTodo: async (req, res) => {
@@ -24,6 +24,16 @@ const todoController = {
       const id = req.params.id
       const todo = await Todo.findOne({ where: { id, UserId } })
       res.render('detail', { todo: todo.toJSON() })
+    } catch (err) {
+      console.log(err)
+    }
+  },
+  getEditTodoPage: async (req, res) => {
+    try {
+      const UserId = req.user.id
+      const id = req.params.id
+      const todo = await Todo.findOne({ where: { id, UserId } })
+      res.render('edit', { todo: todo.toJSON() })
     } catch (err) {
       console.log(err)
     }
