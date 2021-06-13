@@ -58,7 +58,7 @@ const todoController = {
     }
   },
   deleteTodo: async (req, res) => {
-  try {
+    try {
       const UserId = req.user.id
       const id = req.params.id
       const todo = await Todo.findOne({ where: { id, UserId } })
