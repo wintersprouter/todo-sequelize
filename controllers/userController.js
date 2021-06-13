@@ -12,29 +12,58 @@ const userController = {
   getRegisterPage: (req, res) => {
     res.render('register')
   },
-  userRegister: (req, res) => {
-    const { name, email, password, confirmPassword } = req.body
-    User.findOne({ where: { email } }).then(user => {
+  userRegister: async (req, res) => {
+    let { name, email, password, confirmPassword } = req.body
+    const registration_success_msg = `${email}會員註冊成功！`
+    const registration_error_msg = '此會員信箱已註冊！'
+    const errors = []
+    if (!email || !password || !confirmPassword) {
+      errors.push({ message: '請填寫信箱與密碼欄位。' })
+    }
+    if (confirmPassword !== password) {
+      errors.push({ message: '密碼與確認密碼不相符！' })
+      password = ''
+      confirmPassword = ''
+    }
+    if (errors.length) {
+      return res.render('register', {
+        errors,
+        name,
+        email,
+        password,
+        confirmPassword
+      })
+    }
+    try {
+      const user = await User.findOne({ where: { email } })
       if (user) {
-        console.log('User already exists')
+        email = ''
         return res.render('register', {
           name,
           email,
           password,
-          confirmPassword
+          confirmPassword,
+          registration_error_msg
         })
       }
-      return bcrypt
-        .genSalt(10)
-        .then(salt => bcrypt.hash(password, salt))
-        .then(hash => User.create({
-          name,
-          email,
-          password: hash
-        }))
-        .then(() => res.redirect('/'))
-        .catch(err => console.log(err))
-    })
+      const salt = await bcrypt.genSalt(10)
+      const hash = await bcrypt.hash(password, salt)
+      await User.create({
+        name, email, password: hash
+      })
+
+      return res.render('login', {
+        registration_success_msg
+      })
+    } catch (err) {
+      console.log(err)
+      res.render('register', {
+        name,
+        email,
+        password,
+        confirmPassword
+      })
+    }
   },
   userLogout: (req, res) => {
     req.logout()
