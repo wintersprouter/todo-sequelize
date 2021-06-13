@@ -1,7 +1,7 @@
-const homeController = require('../../controllers/homeController')
+const todoController = require('../../controllers/todoController')
 const express = require('express')
 const router = express.Router()
 
-router.get('/:id', homeController.getAllTodos)
+router.get('/:id', todoController.getTodoPage)
 
 module.exports = router

@@ -2,11 +2,14 @@ const db = require('../models')
 const { Todo } = db
 
 const todoController = {
-  getTodo:(req, res) => {
+  getTodoPage: async (req, res) => {
+    try {
     const id = req.params.id
-    return Todo.findByPk(id)
-    .then(todo => res.render('detail', { todo: todo.toJSON() }))
-    .catch(error => console.log(error))
+    const todo = await Todo.findByPk( id )
+    res.render('detail', { todo: todo.toJSON() })
+    } catch (err) {
+      console.log(err)
+    }
   }
 }
 
