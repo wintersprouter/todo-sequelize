@@ -37,6 +37,25 @@ const todoController = {
     } catch (err) {
       console.log(err)
     }
+  },
+  updateTodo: async (req, res) => {
+    try {
+      const UserId = req.user.id
+      const id = req.params.id
+      const { name, isDone } = req.body
+
+      if (!name) {
+        return res.redirect('back')
+      }
+
+      const todo = await Todo.findOne({ where: { id, UserId } })
+      todo.name = name
+      todo.isDone = isDone === 'on'
+      todo.save()
+      return res.redirect(`/todos/${id}`)
+    } catch (err) {
+      console.log(err)
+    }
   }
 }
 
